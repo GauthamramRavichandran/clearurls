@@ -2,3 +2,4 @@ env/
 *.session
 *.pyc
 __pycache__/
+CONFIG.py

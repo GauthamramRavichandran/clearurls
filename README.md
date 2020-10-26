@@ -13,7 +13,7 @@ This bot utilises two libraries (credits to the creators)
 1. Send a link, bot will reply with a clearURL
 2. Add the bot in a group, bot will reply with clearURLs there
 
-#####Deploy your own bot,
+##### Deploy your own bot,
 1. Follow this [guide](https://docs.telethon.dev/en/latest/basic/signing-in.html "setup guide") to get `api_id`, `api_hash` and `bot_token`
 2. Replace those values in `CONFIG.py`
 3. Create a virtualenv and install the `requirements.txt`
