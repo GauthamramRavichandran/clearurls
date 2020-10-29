@@ -46,8 +46,8 @@ async def clearurl_hndlr(event):
 			elif isinstance(entity, MessageEntityUrl):
 				url = event.message.text[entity.offset:entity.offset+entity.length]
 			
-			if url is not None:
-				to_send.append(clear_url(url))
+	        if url is not None:
+			to_send.append(clear_url(url))
 		to_send_txt = "\n\n".join(i for i in to_send)
 		await event.reply(f"🧹 Cleaned URLs: "
 		                  f"\n{to_send_txt}", link_preview = False)
