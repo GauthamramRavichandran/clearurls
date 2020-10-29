@@ -48,8 +48,9 @@ async def clearurl_hndlr(event):
 			
 			if url is not None:
 				to_send.append(clear_url(url))
-		to_send_txt = "\n\n".join(i for i in to_send)
-		await event.reply(f"🧹 Cleaned URLs: "
+                if len(to_send) > 0:
+		    to_send_txt = "\n\n".join(i for i in to_send)
+		    await event.reply(f"🧹 Cleaned URLs: "
 		                  f"\n{to_send_txt}", link_preview = False)
 	else:
 		chat = await event.get_chat()
