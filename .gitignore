@@ -1,4 +1,5 @@
 env/
+.idea/
 *.session
 *.pyc
 __pycache__/
