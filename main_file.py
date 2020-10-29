@@ -48,9 +48,10 @@ async def clearurl_hndlr(event):
 			
 			if url is not None:
 				to_send.append(clear_url(url))
-		to_send_txt = "\n\n".join(i for i in to_send)
-		await event.reply(f"🧹 Cleaned URLs: "
-		                  f"\n{to_send_txt}", link_preview = False)
+                if to_send:
+		        to_send_txt = "\n\n".join(i for i in to_send)
+		        await event.reply(f"🧹 Cleaned URLs: "
+		                  	  f"\n{to_send_txt}", link_preview = False)
 	else:
 		chat = await event.get_chat()
 		if isinstance(chat, User):   # don't disturb the group, only throw error at private chat
