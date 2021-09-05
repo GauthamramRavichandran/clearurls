@@ -5,6 +5,7 @@ Author : Gauthamram Ravichandran
 """
 import logging
 import re
+from telethon.errors.rpcerrorlist import ChatWriteForbiddenError
 from telethon.sync import TelegramClient, events
 from telethon.tl.custom import Button
 from telethon.tl.types import MessageEntityUrl, MessageEntityTextUrl, User
@@ -69,9 +70,14 @@ async def clearurl_hndlr(event):
 
         if to_send:
             to_send_txt = "\n\n".join(i for i in to_send)
-            await event.reply(
-                f"🧹 Cleaned URLs: " f"\n{to_send_txt}", link_preview=False
-            )
+            try:
+                await event.reply(
+                    f"🧹 Cleaned URLs: " f"\n{to_send_txt}", link_preview=False
+                )
+            except ChatWriteForbiddenError:
+                # bot could send to the user (who added this bot to group), since we are not storing any details,
+                # the only way to handle is to ignore
+                pass
         else:
             chat = await event.get_chat()
             if isinstance(
