@@ -105,8 +105,8 @@ async def handler(event):
     if "\n" in event.text:
         input_urls.extend(event.text.split("\n"))
     # if no new line found, (i.e) just one link
-    if event.text and not input_urls:
-        input_urls = event.text
+    if len(event.text) and not input_urls:
+        input_urls = [event.text]
 
     if input_urls:
         result = "\n".join(clear_url(link) for link in input_urls)
