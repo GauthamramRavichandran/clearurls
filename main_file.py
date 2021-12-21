@@ -5,7 +5,7 @@ Author : Gauthamram Ravichandran
 """
 import logging
 import re
-from telethon.errors.rpcerrorlist import ChatWriteForbiddenError
+from telethon.errors.rpcerrorlist import ChatWriteForbiddenError, SlowModeWaitError
 from telethon.sync import TelegramClient, events
 from telethon.tl.custom import Button
 from telethon.tl.types import MessageEntityUrl, MessageEntityTextUrl, User
@@ -15,7 +15,7 @@ from CONFIG import api_hash, api_id, bot_token
 
 logging.basicConfig(
     format="[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s",
-    level=logging.INFO,
+    level=logging.ERROR,
     filename="logs.log",
 )
 
@@ -37,6 +37,8 @@ You can send multiple urls in one message/one inline query as well with newline 
 1. Forward me any message with links, I will reply you with clean URLs
 2. Add me to your group, I will reply the messages with clean URLs
 3. Use me in inline as well (but limited to 255 chars)
+
+PS: Promote me as admin, if you have enabled slow mode in group
 """,
         buttons=[
             Button.url(
@@ -49,7 +51,7 @@ You can send multiple urls in one message/one inline query as well with newline 
 
 @bot.on(events.NewMessage(incoming=True))
 async def clearurl_hndlr(event):
-    if event.message.via_bot is not None:  # Don't handle inline messages
+    if event.message.via_bot is not None:  # Don't handle inline messages by other bots
         return
     if event.message.entities:
         to_send = []
@@ -78,6 +80,9 @@ async def clearurl_hndlr(event):
                 # bot could send to the user (who added this bot to group), since we are not storing any details,
                 # the only way to handle is to ignore
                 pass
+            except SlowModeWaitError:  # FIXME schedule the msg to be sent after wait period
+                pass
+
         else:
             chat = await event.get_chat()
             if isinstance(
@@ -99,8 +104,9 @@ async def handler(event):
     input_urls = []
     if "\n" in event.text:
         input_urls.extend(event.text.split("\n"))
-    if " " in event.text:
-        input_urls.extend(event.text.split(" "))
+    # if no new line found, (i.e) just one link
+    if event.text and not input_urls:
+        input_urls = event.text
 
     if input_urls:
         result = "\n".join(clear_url(link) for link in input_urls)
