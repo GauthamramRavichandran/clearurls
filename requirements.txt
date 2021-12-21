@@ -20,7 +20,7 @@ rfc3986==1.4.0
 rsa==4.6
 six==1.15.0
 sniffio==1.2.0
-Telethon==1.24.5
+Telethon==1.24.0
 tornado==6.0.4
 tzlocal==2.1
 Unalix==0.5
