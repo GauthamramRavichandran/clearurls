@@ -54,7 +54,7 @@ async def clearurl_hndlr(event):
     if event.message.via_bot is not None:  # Don't handle inline messages by other bots
         return
     if event.message.entities:
-        to_send = []
+        to_send = set()
         input_urls = set()
         for input_url in url_re.finditer(event.message.text):
             found = input_url.group()
@@ -71,7 +71,7 @@ async def clearurl_hndlr(event):
                 try:
                     clean_url = clear_url(url)
                     if url != clean_url:
-                        to_send.append(clean_url)
+                        to_send.add(clean_url)
                 except Exception as e:
                     logging.error(f"{e} - URL: {url}")
 
@@ -79,7 +79,7 @@ async def clearurl_hndlr(event):
             to_send_txt = "\n\n".join(i for i in to_send)
             try:
                 await event.reply(
-                    f"🧹 Cleaned URLs: " f"\n{to_send_txt}", link_preview=False
+                    f"🧹 Cleaned URLs: \n{to_send_txt}", link_preview=False
                 )
             except ChatWriteForbiddenError:
                 # bot could send to the user (who added this bot to group), since we are not storing any details,
