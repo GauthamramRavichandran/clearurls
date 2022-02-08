@@ -57,7 +57,9 @@ async def clearurl_hndlr(event):
         to_send = []
         input_urls = set()
         for input_url in url_re.finditer(event.message.text):
-            input_urls.add(input_url.group())
+            found = input_url.group()
+            if len(found) > 10:  # to filter false-positives (decimal numbers are mistaken as urls)
+                input_urls.add(found)
 
         #  Get url from formatted entities
         for entity in event.message.entities:
@@ -66,9 +68,12 @@ async def clearurl_hndlr(event):
 
         if input_urls:
             for url in input_urls:
-                clean_url = clear_url(url)
-                if url != clean_url:
-                    to_send.append(clean_url)
+                try:
+                    clean_url = clear_url(url)
+                    if url != clean_url:
+                        to_send.append(clean_url)
+                except Exception as e:
+                    logging.error(f"{e} - URL: {url}")
 
         if to_send:
             to_send_txt = "\n\n".join(i for i in to_send)
